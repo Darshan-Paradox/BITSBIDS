@@ -30,6 +30,23 @@ public class Bid {
 		this.post = post;
 		this.user = user;
 		this.amount = amount;
+		this.created = new Date();
+	}
+
+	public Long getId() {
+		return this.id;
+	}
+	public User getUser() {
+		return this.id;
+	}
+	public Post getPost() {
+		return this.post;
+	}
+	public Long getAmount() {
+		return this.amount;
+	}
+	public Date getCreated() {
+		return this.created;
 	}
 
 }

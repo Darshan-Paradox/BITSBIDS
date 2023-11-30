@@ -34,8 +34,9 @@ public class PostController {
 
     @CrossOrigin
     @GetMapping("/post")
-    public ResponseEntity<?> getPostById() {
-        return new ResponseEntity<>(postRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> getPost(@AuthenticationPrincipal OidcUser user) {
+        User currentUser = userRepository.findByEmail(user.getEmail());
+        return new ResponseEntity<>(postRepository.findByUser(currentUser), HttpStatus.OK);
     }
 
 
@@ -63,7 +64,7 @@ public class PostController {
         begin = end;
         end = tmp;
 
-        List<Post> response = postRepository.getPostByIdLimits(begin, end);
+        List<Post> response = postRepository.findPostByIdLimits(begin, end);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -75,7 +76,7 @@ public class PostController {
 
     @CrossOrigin
     @PostMapping(value = "/post", consumes = {"*/*"})
-    public ResponseEntity<?> getPostByPage(@RequestBody Post post) {
+    public ResponseEntity<?> createPost(@RequestBody Post post) {
         return new ResponseEntity<>(postRepository.save(post), HttpStatus.CREATED);
     }
 

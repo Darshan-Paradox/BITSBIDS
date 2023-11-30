@@ -58,8 +58,19 @@ public class Post {
 		return this.id;
 	}
 	public User getUser() {
+		Date currentTime = new Date();
+		if (this.deadline.before(currentTime)) {
+			return this.user;
+		}
+		return null;
+	}
+
+	@JsonIgnore
+	public User getUserFromServer()
+	{
 		return this.user;
 	}
+
 	public String getTitle() {
 		return this.title;
 	}
