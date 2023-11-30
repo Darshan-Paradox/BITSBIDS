@@ -1,0 +1,22 @@
+.cardBox{
+    /* background-color: rgb(24, 10, 71);  */
+    padding-top: 50px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    height: 100%;
+    margin: auto;
+  }
+
+.HomePage{
+  background-color: rgb(24, 10, 71);
+}
+
+ .bidform{
+  /* background-color: rgb(24, 10, 71); */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}  
