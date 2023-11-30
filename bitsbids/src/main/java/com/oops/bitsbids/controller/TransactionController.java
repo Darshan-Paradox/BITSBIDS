@@ -27,7 +27,7 @@ import java.lang.*;
 
 @RestController
 @RequestMapping("/api")
-public class BidController {
+public class TransactionController {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -38,23 +38,24 @@ public class BidController {
 	@Autowired
 	private BidRepository bidRepository;
 
-	public BidController() {}
-
 	@CrossOrigin
-	@GetMapping("/bid/{postId}")
-	public ResponseEntity<?> getBidByPost(@PathVariable("postId") Long postId) {
-		List<Bid> response = bidRepository.findByPost(postId);
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+	@GetMapping("/payment/{postId}")
+	public ResponseEntity<?> completePayment(@PathVariable("postId") Long postId) {
+		List<Bid> bids = bidRepository.findByPost(postId);
+		Bid winner = bids.get(0);
 
+		if (!winner.getTransaction()) {
+			Post post = postRepository.findById(postId).get();
+			User owner = post.getUserFromServer();
 
-	@CrossOrigin
-	@PostMapping("/bid")
-	public ResponseEntity<?> createBid(@RequestBody Bid bid) {
-		if (bid.getAmount() > bid.getUserFromServer().getCoins()) {
-			return new ResponseEntity<>(null, HttpStatus.OK);
+			owner.setCoins(owner.getCoins() + winner.getAmount());
+
+			User bidder = winner.getUserFromServer();
+			bidder.setCoins(bidder.getCoins() - winner.getAmount());
+
+			winner.setTransaction(true);
 		}
-		return new ResponseEntity<>(bidRepository.save(bid), HttpStatus.CREATED);
-	}
 
+		return new ResponseEntity<>("Payment done!", HttpStatus.OK);
+	}
 }

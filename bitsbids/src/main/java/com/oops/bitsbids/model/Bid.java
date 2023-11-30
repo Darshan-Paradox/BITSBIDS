@@ -22,6 +22,8 @@ public class Bid {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date created;
 
+	private boolean transacted;
+
 	public Bid() {}
 
 	public Bid(Post post, User user, Long amount) {
@@ -29,6 +31,7 @@ public class Bid {
 		this.user = user;
 		this.amount = amount;
 		this.created = new Date();
+		this.transacted = false;
 	}
 
 	public Long getId() {
@@ -39,12 +42,16 @@ public class Bid {
 		if (this.post.getDeadline().before(currentTime)) {
 			return this.user;
 		}
-		return this.user;
+		return null;
 	}
 
 	@JsonIgnore
 	public User getUserFromServer() {
 		return this.user;
+	}
+	@JsonIgnore
+	public boolean getTransaction() {
+		return this.transacted;
 	}
 
 	public Post getPost() {
@@ -68,6 +75,9 @@ public class Bid {
 	}
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	public void setTransaction(boolean transacted) {
+		this.transacted = transacted;
 	}
 
 }

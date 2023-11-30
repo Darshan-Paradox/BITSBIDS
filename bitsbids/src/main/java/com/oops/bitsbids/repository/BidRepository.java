@@ -12,7 +12,7 @@ import java.util.*;
 @Repository
 public interface BidRepository extends JpaRepository <Bid, Long> {
 
-	@Query("SELECT b FROM Bid b WHERE b.post.id = :postId")
+	@Query("SELECT b FROM Bid b WHERE b.post.id = :postId ORDER BY b.amount DESC")
 	List<Bid> findByPost(@Param("postId") Long postId);
 
 }
