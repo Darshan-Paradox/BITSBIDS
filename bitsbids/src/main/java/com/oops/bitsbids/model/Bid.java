@@ -1,8 +1,8 @@
 package com.oops.bitsbids.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 
@@ -12,12 +12,10 @@ public class Bid {
 	@Id
 	private Long id;
 
-	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@ManyToOne(cascade=CascadeType.REMOVE)
 	private Post post;
 
-	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@ManyToOne(cascade=CascadeType.REMOVE)
 	private User user;
 
 	private Long amount;
@@ -37,8 +35,18 @@ public class Bid {
 		return this.id;
 	}
 	public User getUser() {
-		return this.id;
+		Date currentTime = new Date();
+		if (this.post.getDeadline().before(currentTime)) {
+			return this.user;
+		}
+		return this.user;
 	}
+
+	@JsonIgnore
+	public User getUserFromServer() {
+		return this.user;
+	}
+
 	public Post getPost() {
 		return this.post;
 	}
@@ -47,6 +55,19 @@ public class Bid {
 	}
 	public Date getCreated() {
 		return this.created;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	public void setPost(Post post) {
+		this.post = post;
+	}
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 }

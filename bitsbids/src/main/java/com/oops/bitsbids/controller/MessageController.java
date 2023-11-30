@@ -61,12 +61,12 @@ public class MessageController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
-	@PostMapping("/{id}")
+	@PostMapping("/chat/{id}")
 	public ResponseEntity<?> createMessage(@AuthenticationPrincipal OidcUser user, @PathVariable("id") Long id, @RequestBody Message message) {
-		Message lastSent = messageRepository.findById(id);
+		Message lastSent = messageRepository.findById(id).get();
 
 		if (lastSent == null) {
-			Post post = postRepository.findById(id);
+			Post post = postRepository.findById(id).get();
 			message.setBidder(userRepository.findByEmail(user.getEmail()));
 			message.setOwner(post.getUserFromServer());
 			return new ResponseEntity<>(messageRepository.save(message), HttpStatus.CREATED);

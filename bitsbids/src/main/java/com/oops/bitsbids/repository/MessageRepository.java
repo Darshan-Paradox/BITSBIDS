@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.oops.bitsbids.model.Message;
-import com.oops.bitsbids.model.Post;
 
 import java.util.*;
 

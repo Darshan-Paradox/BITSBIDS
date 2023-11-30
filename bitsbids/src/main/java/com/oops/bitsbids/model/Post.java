@@ -1,15 +1,10 @@
 package com.oops.bitsbids.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.*;
-
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
 import java.util.Date;
-import java.util.Calendar;
 
 @Entity
 public class Post {
@@ -18,9 +13,7 @@ public class Post {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
-	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
-	//@JsonIgnore
+	@ManyToOne(cascade=CascadeType.REMOVE)
 	private User user;
 
 	private String title;

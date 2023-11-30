@@ -1,7 +1,5 @@
 package com.oops.bitsbids.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,15 +14,12 @@ public class Message {
 	private Long id;
 
 	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User owner;
 
 	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
 	private User bidder;
 
-	@ManyToOne
-	@OnDelete(action=OnDeleteAction.CASCADE)
+	@ManyToOne(cascade=CascadeType.REMOVE)
 	private Post post;
 
 	private boolean direction;
