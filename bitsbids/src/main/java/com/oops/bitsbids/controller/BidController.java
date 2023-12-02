@@ -51,10 +51,16 @@ public class BidController {
 	@CrossOrigin
 	@PostMapping("/bid")
 	public ResponseEntity<?> createBid(@RequestBody Bid bid) {
-		if (bid.getAmount() > bid.getUserFromServer().getCoins()) {
+		if (bid.getPost().getFrozen()) {
 			return new ResponseEntity<>(null, HttpStatus.OK);
 		}
-		return new ResponseEntity<>(bidRepository.save(bid), HttpStatus.CREATED);
+		else if (bid.getAmount() > bid.getUserFromServer().getCoins() && bid.getAmount() <= bid.getPost().getBasePrice()) {
+			return new ResponseEntity<>(null, HttpStatus.OK);
+		}
+		else {
+			bid.getPost().setBasePrice(bid.getAmount());
+			return new ResponseEntity<>(bidRepository.save(bid), HttpStatus.CREATED);
+		}
 	}
 
 }

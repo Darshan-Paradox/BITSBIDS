@@ -1,0 +1,132 @@
+<script>
+	import { getBidByPost, submitBid } from "../stores/bid.js";
+
+	import { Tag, Link, Button, Modal } from "carbon-components-svelte";
+	import { Header, HeaderUtilities, HeaderAction, HeaderSearch } from "carbon-components-svelte";
+	import { HeaderPanelLinks, HeaderPanelDivider, HeaderPanelLink } from "carbon-components-svelte";
+
+	import PostForm from "../components/PostForm.svelte";
+
+	import UserAvatarFilled from "carbon-icons-svelte/lib/UserAvatarFilled.svelte";
+	import UserAvatarFilledAlt from "carbon-icons-svelte/lib/UserAvatarFilledAlt.svelte";
+	import Currency from "carbon-icons-svelte/lib/Currency.svelte";
+
+	let open = false;
+	export let user = null;
+	export let posts = [];
+
+	let value = "";
+
+	$: results = value.length > 0 ? posts.filter((item) => {
+          return (
+            item.title.toLowerCase().includes(value.toLowerCase()) ||
+            item.description.includes(value.toLowerCase())
+          );
+        })
+      : [];
+
+	$: results = results ? results.map((item) => {
+		item.text = item.title;
+		return item;
+	}) : [];
+
+	let display = false;
+	let post = {};
+	function showPost(event)
+	{
+		display = true;
+		post = event.detail.selectedResult;
+	}
+</script>
+
+<Header company="G65" platformName="BITSBIDS">
+	<HeaderUtilities>
+
+		<HeaderSearch
+			bind:value
+			{results}
+			on:select={showPost}
+		/>
+
+		<div class="create-post-btn">
+			<Button kind="ghost" on:click={() => (open = true)}>
+				<p class="create-post">Create Post</p>
+			</Button>
+		</div>
+
+		<HeaderAction icon={UserAvatarFilledAlt} closeIcon={UserAvatarFilled}>
+			{#if user}
+				<HeaderPanelLinks>
+					<img src={user.icon} alt="profile icon"/>
+					<HeaderPanelDivider>User Info:</HeaderPanelDivider>
+						<HeaderPanelLink>{user.username}</HeaderPanelLink>
+						<HeaderPanelLink>{user.email}</HeaderPanelLink>
+					<HeaderPanelDivider>Coins:</HeaderPanelDivider>
+						<HeaderPanelLink>{user.coins}</HeaderPanelLink>
+						<HeaderPanelLink><Link href="" icon={Currency}>Add Coins</Link></HeaderPanelLink>
+				</HeaderPanelLinks>
+			{:else}
+				<HeaderPanelLinks>
+					<HeaderPanelDivider>
+						<Button size="small" href="/login">Login</Button>
+					</HeaderPanelDivider>
+				</HeaderPanelLinks>
+			{/if}
+		</HeaderAction>
+	</HeaderUtilities>
+</Header>
+
+<Modal 
+	passiveModal
+	bind:open 
+	modalHeading="Create post"
+	on:open
+	on:close
+>
+<PostForm bind:open/>
+</Modal>
+
+<Modal 
+	passiveModal
+	bind:open={display}
+	modalHeading={post.title}
+	on:open
+	on:close
+>
+	<h6>{post.description}</h6>
+	<Tag type="green">
+		{#await getBidByPost(post.id) then bids}
+			{#if bids.length}
+				{`₹${bids[0].amount}`}
+			{:else}
+				{`₹${post.basePrice}`}
+			{/if}
+		{/await}
+	</Tag>
+</Modal>
+
+<style>
+	.create-post {
+		width: 100%;
+		height: 100%;
+
+		font-size: 1rem;
+		color: white;
+	}
+	.create-post-btn:hover .create-post {
+		color: black;
+	}
+
+	img {
+		margin-left: 40%;
+		margin-right: 40%;
+
+		margin-top: 10%;
+		margin-bottom: 10%;
+
+		border-radius: 50%;
+
+		align-self: center;
+		width: 20%;
+	}
+</style>

@@ -33,12 +33,10 @@ public class BitsbidsApplication {
 		return new BCryptPasswordEncoder(16);
 	}
 
-	/*
 	@CrossOrigin
 	@GetMapping("/")
 	public ResponseEntity<Void> redirect(@RequestParam Map<String,String> input) {
 		return ResponseEntity.status(HttpStatus.FOUND).location(URI.create("http://localhost:5173/")).build();
 	}
-	*/
 
 }

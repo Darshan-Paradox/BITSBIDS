@@ -17,8 +17,8 @@ public interface PostRepository extends JpaRepository <Post, Long> {
 
 	//Post getById(Long id);
 
-	@Query("SELECT p FROM Post p WHERE p.id >= :start AND p.id <= :end")
-	List<Post> findPostByIdLimits(@Param("start") Long begin, @Param("end") Long end);
+	@Query(value="SELECT p.* FROM Post p WHERE p.user_id != :userId ORDER BY p.id DESC OFFSET :offset ROWS FETCH FIRST :size ROWS ONLY", nativeQuery=true)
+	List<Post> findPostByIdLimits(@Param("offset") Long offset, @Param("size") Long size, @Param("userId") Long userId);
 
 	List<Post> findByUser(User user);
 

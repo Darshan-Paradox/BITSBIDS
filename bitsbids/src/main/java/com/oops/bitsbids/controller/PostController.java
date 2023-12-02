@@ -39,44 +39,58 @@ public class PostController {
         return new ResponseEntity<>(postRepository.findByUser(currentUser), HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @GetMapping("/post/50")
+    public ResponseEntity<?> getPostByPage(@AuthenticationPrincipal OidcUser user) {
 
+        //PAGINATION LOGIC
+        Long pageSize = 50l;
+
+        Long offset = 0l;
+
+        User currentUser = userRepository.findByEmail(user.getEmail());
+
+        List<Post> response = postRepository.findPostByIdLimits(offset, pageSize, currentUser.getId());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @CrossOrigin
     @GetMapping("/post/page/{page}")
-    public ResponseEntity<?> getPostByPage(@PathVariable("page") Long page) {
+    public ResponseEntity<?> getPostByPage(@AuthenticationPrincipal OidcUser user, @PathVariable("page") Long page) {
 
         //PAGINATION LOGIC
-        Long pageSize = 10l;
-        Long size = postRepository.count();
+        Long pageSize = 3l;
 
-        Long begin, end;
+        Long offset = (page - 1)*pageSize;
 
-        begin = pageSize*(page - 1) + 1;
-        end = pageSize*page;
+        User currentUser = userRepository.findByEmail(user.getEmail());
 
-        if (begin < 1) begin = 1l;
-        if (end > size) end = size;
-
-        begin = size - begin + 1;
-        end = size - end + 1;
-
-        Long tmp = begin;
-        begin = end;
-        end = tmp;
-
-        List<Post> response = postRepository.findPostByIdLimits(begin, end);
+        List<Post> response = postRepository.findPostByIdLimits(offset, pageSize, currentUser.getId());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @CrossOrigin
     @GetMapping("/post/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> freezePostById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(postRepository.findById(id), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping("/post/freeze/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable("id") Long id) {
+        Post post = postRepository.findById(id).get();
+        post.setDeadline(new Date());
+
+        return new ResponseEntity<>(postRepository.save(post), HttpStatus.OK);
     }
 
     @CrossOrigin
     @PostMapping(value = "/post", consumes = {"*/*"})
     public ResponseEntity<?> createPost(@RequestBody Post post) {
+
+        if (post.getUserFromServer() == null)
+            return new ResponseEntity<>(null, HttpStatus.OK);
+
         return new ResponseEntity<>(postRepository.save(post), HttpStatus.CREATED);
     }
 

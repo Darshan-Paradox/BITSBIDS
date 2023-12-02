@@ -10,6 +10,7 @@ import java.util.Date;
 public class Bid {
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne(cascade=CascadeType.REMOVE)

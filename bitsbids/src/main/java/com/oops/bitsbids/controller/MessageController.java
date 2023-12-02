@@ -65,15 +65,24 @@ public class MessageController {
 	public ResponseEntity<?> createMessage(@AuthenticationPrincipal OidcUser user, @PathVariable("id") Long id, @RequestBody Message message) {
 		Message lastSent = messageRepository.findById(id).get();
 
-		if (lastSent == null) {
-			Post post = postRepository.findById(id).get();
-			message.setBidder(userRepository.findByEmail(user.getEmail()));
-			message.setOwner(post.getUserFromServer());
-			return new ResponseEntity<>(messageRepository.save(message), HttpStatus.CREATED);
-		}
-
 		message.setOwner(lastSent.getOwnerFromServer());
 		message.setBidder(lastSent.getBidderFromServer());
+
+		if (lastSent.getBidderFromServer() == userRepository.findByEmail(user.getEmail())) {
+			message.setDirection(false);
+		} else {
+			message.setDirection(true);
+		}
+
+		return new ResponseEntity<>(messageRepository.save(message), HttpStatus.CREATED);
+	}
+
+	@PostMapping("/chat/new/{id}")
+	public ResponseEntity<?> createNewMessage(@AuthenticationPrincipal OidcUser user, @PathVariable("id") Long id, @RequestBody Message message) {
+		Post post = postRepository.findById(id).get();
+		message.setBidder(userRepository.findByEmail(user.getEmail()));
+		message.setOwner(post.getUserFromServer());
+		message.setDirection(false);
 
 		return new ResponseEntity<>(messageRepository.save(message), HttpStatus.CREATED);
 	}

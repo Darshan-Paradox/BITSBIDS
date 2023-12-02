@@ -80,6 +80,15 @@ public class Post {
 		return this.multimedia;
 	}
 
+	@JsonIgnore
+	public boolean getFrozen() {
+		Date currentTime = new Date();
+		if (this.deadline.before(currentTime)) {
+			return false;
+		}
+		return true;
+	}
+
 	public void setUser(User user) {
 		this.user = user;
 	}

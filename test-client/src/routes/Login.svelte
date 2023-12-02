@@ -1,10 +1,24 @@
 <script>
+	import Header from "../components/Header.svelte";
+
+	import { Button } from "carbon-components-svelte";
+
+	import Login from "carbon-icons-svelte/lib/Login.svelte";
+
 	function redirect()
 	{
-		window.location.replace("http://localhost:8080/oauth2/authorization/google");
+		window.location.assign("http://localhost:8080/oauth2/authorization/google");
 	}
 </script>
 
-<button on:click={redirect}>
-	Login with Gmail
-</button>
+
+<Header/>
+<div>
+	<Button kind="tertiary" icon={Login} on:click={redirect}>Log In with Google</Button>
+</div>
+
+<style>
+	div {
+		align-self: center;
+	}
+</style>

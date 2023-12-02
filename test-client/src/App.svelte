@@ -5,7 +5,6 @@
 	import Login from "./routes/Login.svelte";
 	import Dashboard from "./routes/Dashboard.svelte";
 	import Post from "./routes/Post.svelte";
-	import Redirect from "./routes/Redirect.svelte";
 
 	let page;
 	let params;
@@ -14,7 +13,6 @@
 	router("/login", () => { page=Login });
 	router("/dashboard", () => { page=Dashboard });
 	router("/post", () => { page=Post });
-	router("/redirect", () => { page=Redirect });
 
 	router.start();
 </script>
