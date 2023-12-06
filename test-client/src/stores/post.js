@@ -7,7 +7,7 @@ async function getPostByPage(page)
     mode: "cors",
 	credentials: "include",
     headers: {
-      "Access-Control-Allow-Origin": "http://localhost:8080/",
+      "Access-Control-Allow-Origin": "*",
 	  "X-XSRF-TOKEN": csrf_token
 	}
   });
@@ -24,7 +24,7 @@ async function freezePost(id)
     mode: "cors",
 	credentials: "include",
     headers: {
-      "Access-Control-Allow-Origin": "http://localhost:8080/",
+      "Access-Control-Allow-Origin": "*",
 	  "X-XSRF-TOKEN": csrf_token
 	}
   });

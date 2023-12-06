@@ -13,8 +13,10 @@
   } from "carbon-components-svelte";
 
     import { submitPost } from "../stores/post.js";
+    import { uploadFile } from "../stores/multimedia.js";
     import { getUser } from "../stores/user.js";
 
+    let files;
     async function submit(event)
     {
         event.preventDefault();
@@ -39,7 +41,10 @@
         post["deadline"] = new Date(date[2], date[1] - 1, date[0], time[0], time[1]);
         post["user"] = await getUser();
 
-        await submitPost(post);
+        //let fileName = (await uploadFile(files)).filename;
+        //post["multimedia"] = fileName;
+
+        let storedPost = await submitPost(post);
 
         event.target.reset();
         open = false;
@@ -79,7 +84,7 @@
 
     <br>
 
-    <FileUploader multiple kind="tertiary" labelTitle="Add photos and videos" buttonLabel="Add files" accept={[".jpg", ".jpeg", ".png", ".webp", ".mp4"]} status="edit" name="files" id="files"/>
+    <FileUploader kind="tertiary" labelTitle="Add photos and videos" buttonLabel="Add files" accept={[".jpg", ".jpeg", ".png", ".webp", ".mp4"]} status="edit" name="files" id="files" bind:files={files}/>
 
     <br>
 

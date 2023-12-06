@@ -6,6 +6,7 @@
 	import { freezePost } from "../stores/post.js";
 	import { getBidByPost, submitBid } from "../stores/bid.js";
 	import { sendMessage } from "../stores/message.js";
+	import { downloadFile } from "../stores/multimedia.js";
 
 	import { TextArea, Button, Tag } from "carbon-components-svelte";
 	import { Modal } from "carbon-components-svelte";
@@ -41,9 +42,10 @@
 	{
 		console.log(await sendMessage(post.id, post, text, true));
 		text = "";
-		disabled = true;
 		open = false;
 	}
+
+	//let url = downloadFile(post.multimedia);
 </script>
 
 <ExpandableTile light on:click={(event) => {event.preventDefault()}}>
@@ -120,5 +122,8 @@
 		justify-content: space-between;
 
 		height: fit-content;
+	}
+	img {
+		width: 100px;
 	}
 </style>
